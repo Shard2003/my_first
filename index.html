@@ -1,646 +1,273 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>College Life ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --sun:    #FFD23F;
-    --coral:  #FF6B6B;
-    --mint:   #4ECDC4;
-    --purple: #A855F7;
-    --blue:   #3B82F6;
-    --lime:   #84CC16;
-    --bg:     #FFF9F0;
-    --ink:    #1A1A2E;
-    --card:   #FFFFFF;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Animation</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #020408;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      font-family: 'Courier New', monospace;
+    }
 
-  html { scroll-behavior: smooth; }
+    canvas { display: block; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--ink);
-    overflow-x: hidden;
-  }
+    #overlay {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 10;
+    }
 
-  /* ── Floating confetti ── */
-  .confetti-wrap {
-    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-  }
-  .dot {
-    position: absolute;
-    border-radius: 50%;
-    opacity: 0.55;
-    animation: floatUp linear infinite;
-  }
+    #overlay h1 {
+      font-size: clamp(12px, 2vw, 18px);
+      font-weight: 400;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(100, 180, 255, 0.55);
+      animation: fadeLabel 3s ease-in-out infinite alternate;
+    }
 
-  @keyframes floatUp {
-    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0.6; }
-    100% { transform: translateY(-10vh)  rotate(720deg); opacity: 0; }
-  }
+    @keyframes fadeLabel {
+      from { opacity: 0.3; }
+      to   { opacity: 0.9; }
+    }
 
-  /* ── HERO ── */
-  .hero {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 40px 20px 60px;
-    background: linear-gradient(160deg, #fff7e6 0%, #fce4ff 50%, #e0f2fe 100%);
-  }
-
-  .hero-badge {
-    display: inline-block;
-    background: var(--sun);
-    color: var(--ink);
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 18px;
-    border-radius: 999px;
-    margin-bottom: 24px;
-    animation: popIn 0.6s cubic-bezier(.34,1.56,.64,1) both;
-  }
-
-  .hero h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(3rem, 9vw, 7.5rem);
-    line-height: 1.05;
-    color: var(--ink);
-    animation: slideUp 0.7s cubic-bezier(.34,1.4,.64,1) 0.1s both;
-  }
-
-  .hero h1 .highlight-coral  { color: var(--coral); }
-  .hero h1 .highlight-mint   { color: var(--mint); }
-  .hero h1 .highlight-purple { color: var(--purple); }
-
-  .hero-sub {
-    font-size: clamp(1rem, 2.5vw, 1.3rem);
-    font-weight: 600;
-    color: #555;
-    max-width: 560px;
-    margin: 20px auto 36px;
-    animation: slideUp 0.7s cubic-bezier(.34,1.4,.64,1) 0.22s both;
-  }
-
-  /* The signature element: a bouncing emoji campus strip */
-  .emoji-strip {
-    display: flex;
-    gap: 14px;
-    font-size: 2.4rem;
-    animation: slideUp 0.7s ease 0.35s both;
-  }
-  .emoji-strip span {
-    display: inline-block;
-    animation: bounce 2s ease-in-out infinite;
-    cursor: default;
-  }
-  .emoji-strip span:nth-child(1) { animation-delay: 0.0s; }
-  .emoji-strip span:nth-child(2) { animation-delay: 0.15s; }
-  .emoji-strip span:nth-child(3) { animation-delay: 0.3s; }
-  .emoji-strip span:nth-child(4) { animation-delay: 0.45s; }
-  .emoji-strip span:nth-child(5) { animation-delay: 0.6s; }
-  .emoji-strip span:nth-child(6) { animation-delay: 0.75s; }
-  .emoji-strip span:nth-child(7) { animation-delay: 0.9s; }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0) rotate(-4deg); }
-    50%       { transform: translateY(-14px) rotate(4deg); }
-  }
-
-  /* scroll arrow */
-  .scroll-hint {
-    position: absolute;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.6rem;
-    animation: arrowBounce 1.5s ease-in-out infinite;
-    opacity: 0.5;
-  }
-  @keyframes arrowBounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50%       { transform: translateX(-50%) translateY(8px); }
-  }
-
-  /* ── Section wrapper ── */
-  section {
-    position: relative; z-index: 1;
-    padding: 80px 20px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--purple);
-    margin-bottom: 10px;
-  }
-
-  .section-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    line-height: 1.1;
-    margin-bottom: 48px;
-    color: var(--ink);
-  }
-
-  /* ── Moment cards ── */
-  .moments-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-  }
-
-  .moment-card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 32px 24px 28px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s ease;
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-  }
-  .moment-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 5px;
-    border-radius: 20px 20px 0 0;
-  }
-  .moment-card:hover {
-    transform: translateY(-8px) rotate(-1deg);
-    box-shadow: 0 16px 48px rgba(0,0,0,0.13);
-  }
-
-  .card-coral::before  { background: var(--coral); }
-  .card-mint::before   { background: var(--mint); }
-  .card-purple::before { background: var(--purple); }
-  .card-blue::before   { background: var(--blue); }
-  .card-sun::before    { background: var(--sun); }
-  .card-lime::before   { background: var(--lime); }
-
-  .moment-icon { font-size: 2.8rem; margin-bottom: 16px; display: block; }
-  .moment-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.35rem;
-    margin-bottom: 8px;
-    color: var(--ink);
-  }
-  .moment-desc {
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: #555;
-  }
-
-  /* ── Day schedule strip ── */
-  .schedule-section {
-    background: linear-gradient(135deg, #1A1A2E 0%, #2d1b69 100%);
-    max-width: 100%;
-    padding: 80px 20px;
-    color: white;
-  }
-  .schedule-inner { max-width: 1100px; margin: 0 auto; }
-
-  .schedule-section .section-label { color: var(--sun); }
-  .schedule-section .section-title { color: white; }
-
-  .timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    position: relative;
-  }
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 50px;
-    top: 0; bottom: 0;
-    width: 3px;
-    background: rgba(255,255,255,0.12);
-    border-radius: 3px;
-  }
-
-  .t-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    padding: 20px 0;
-    animation: fadeSlide 0.5s ease both;
-  }
-
-  .t-time {
-    min-width: 100px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.45);
-    padding-top: 6px;
-    text-align: right;
-  }
-
-  .t-dot {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 7px;
-    box-shadow: 0 0 0 4px rgba(255,255,255,0.08);
-  }
-
-  .t-content {
-    flex: 1;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 16px 20px;
-    transition: background 0.2s;
-  }
-  .t-content:hover { background: rgba(255,255,255,0.12); }
-
-  .t-activity {
-    font-weight: 800;
-    font-size: 1rem;
-    margin-bottom: 4px;
-  }
-  .t-mood {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.55);
-  }
-
-  /* ── Vibe meter ── */
-  .vibe-section { background: #fff; max-width: 100%; padding: 80px 20px; }
-  .vibe-inner { max-width: 1100px; margin: 0 auto; }
-
-  .vibe-bars { display: flex; flex-direction: column; gap: 20px; }
-  .vibe-row { display: flex; align-items: center; gap: 16px; }
-  .vibe-label {
-    min-width: 160px;
-    font-weight: 700;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .vibe-track {
-    flex: 1;
-    height: 14px;
-    background: #f0f0f0;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .vibe-fill {
-    height: 100%;
-    border-radius: 999px;
-    width: 0;
-    transition: width 1.4s cubic-bezier(.34,1,.64,1);
-  }
-  .vibe-pct {
-    min-width: 42px;
-    font-weight: 800;
-    font-size: 0.9rem;
-    color: #888;
-    text-align: right;
-  }
-
-  /* ── Friendship wall ── */
-  .friends-section {
-    background: linear-gradient(160deg, #fce4ff 0%, #e0f2fe 100%);
-    max-width: 100%;
-    padding: 80px 20px;
-  }
-  .friends-inner { max-width: 1100px; margin: 0 auto; }
-
-  .avatar-wall {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: center;
-    margin-bottom: 48px;
-  }
-
-  .avatar {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
-    cursor: default;
-    position: relative;
-  }
-  .avatar:hover { transform: scale(1.2) rotate(8deg); }
-
-  .avatar .name-tag {
-    position: absolute;
-    bottom: -28px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    font-weight: 700;
-    white-space: nowrap;
-    color: var(--ink);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .avatar:hover .name-tag { opacity: 1; }
-
-  /* Quotes */
-  .quote-ticker {
-    background: white;
-    border-radius: 20px;
-    padding: 32px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-    text-align: center;
-    min-height: 130px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .quote-text {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(1.1rem, 3vw, 1.6rem);
-    color: var(--ink);
-    margin-bottom: 12px;
-    transition: opacity 0.4s ease;
-  }
-  .quote-author {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #aaa;
-    letter-spacing: 0.08em;
-    transition: opacity 0.4s ease;
-  }
-
-  /* ── Footer ── */
-  footer {
-    position: relative; z-index: 1;
-    text-align: center;
-    padding: 48px 20px;
-    background: var(--ink);
-    color: rgba(255,255,255,0.5);
-    font-size: 0.9rem;
-  }
-  footer strong { color: var(--sun); }
-
-  /* ── Animations ── */
-  @keyframes popIn {
-    from { opacity: 0; transform: scale(0.7); }
-    to   { opacity: 1; transform: scale(1); }
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeSlide {
-    from { opacity: 0; transform: translateX(-20px); }
-    to   { opacity: 1; transform: translateX(0); }
-  }
-
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.34,1,.64,1);
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  @media (max-width: 600px) {
-    .timeline::before { left: 28px; }
-    .t-time { min-width: 70px; font-size: 0.72rem; }
-    .vibe-label { min-width: 120px; font-size: 0.85rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; transition: none !important; }
-    .reveal { opacity: 1; transform: none; }
-  }
-</style>
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Floating confetti dots -->
-<div class="confetti-wrap" id="confetti"></div>
-
-<!-- ═══════════════ HERO ═══════════════ -->
-<div class="hero">
-  <div class="hero-badge">🎓 Campus Vibes — Real Talk</div>
-  <h1>
-    This Is Your<br/>
-    <span class="highlight-coral">Wild,</span>
-    <span class="highlight-mint"> Messy,</span><br/>
-    <span class="highlight-purple">Beautiful</span> College Life
-  </h1>
-  <p class="hero-sub">Late nights, loud laughs, instant noodles, and memories you'll tell your kids about someday.</p>
-  <div class="emoji-strip">
-    <span>📚</span><span>☕</span><span>🎉</span><span>💻</span><span>🍕</span><span>🤝</span><span>🌙</span>
-  </div>
-  <div class="scroll-hint">↓</div>
+<div id="overlay">
+  <h1>Drag to explore &nbsp;·&nbsp; Scroll to zoom</h1>
 </div>
 
-<!-- ═══════════════ MOMENTS ═══════════════ -->
-<section>
-  <div class="section-label reveal">The Moments That Define You</div>
-  <div class="section-title reveal">Every College Day Is a Story 📖</div>
-  <div class="moments-grid">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ─── Scene ─────────────────────────────────────────────────── */
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0x020408);
+document.body.prepend(renderer.domElement);
 
-    <div class="moment-card card-coral reveal">
-      <span class="moment-icon">😴</span>
-      <div class="moment-title">The 3 AM Grind</div>
-      <div class="moment-desc">Assignment due at 8 AM, you found out at 11 PM. Coffee is cold. Laptop fan sounds like a jet engine. You finish it and feel like an absolute legend.</div>
-    </div>
+const scene  = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+camera.position.set(0, 0, 18);
 
-    <div class="moment-card card-mint reveal">
-      <span class="moment-icon">🍜</span>
-      <div class="moment-title">Hostel Kitchen Chaos</div>
-      <div class="moment-desc">6 people crowded around one stove, sharing one bad knife. Somehow the maggi that night tasted like the best meal of your life. It was the company.</div>
-    </div>
+/* ─── Fog ────────────────────────────────────────────────────── */
+scene.fog = new THREE.FogExp2(0x020408, 0.028);
 
-    <div class="moment-card card-purple reveal">
-      <span class="moment-icon">🎤</span>
-      <div class="moment-title">Fest Season Madness</div>
-      <div class="moment-desc">Techfest, Culturals, Spardha — you rehearsed for a month, performed for 3 minutes, and talked about it for 3 years. Best 3 minutes ever.</div>
-    </div>
+/* ─── Lights ─────────────────────────────────────────────────── */
+const ambient = new THREE.AmbientLight(0x0a1a2f, 2);
+scene.add(ambient);
 
-    <div class="moment-card card-blue reveal">
-      <span class="moment-icon">🏃</span>
-      <div class="moment-title">Attendance Emergency</div>
-      <div class="moment-desc">75% attendance minimum. You have 63%. It's Week 14. A full sprint to class in slippers at 8:55 AM. Professor sees you. Respects it. Marks you present.</div>
-    </div>
+const pointA = new THREE.PointLight(0x3399ff, 6, 40);
+pointA.position.set(8, 6, 6);
+scene.add(pointA);
 
-    <div class="moment-card card-sun reveal">
-      <span class="moment-icon">🌅</span>
-      <div class="moment-title">Campus at 6 AM</div>
-      <div class="moment-desc">Empty roads, cool air, birds singing. You're only up because you haven't slept yet. But this version of campus belongs entirely to you. Still beautiful.</div>
-    </div>
+const pointB = new THREE.PointLight(0xff4488, 4, 35);
+pointB.position.set(-8, -5, 4);
+scene.add(pointB);
 
-    <div class="moment-card card-lime reveal">
-      <span class="moment-icon">🤣</span>
-      <div class="moment-title">Canteen Squad Lunch</div>
-      <div class="moment-desc">One hour between lectures. Samosa, chai, and 40 minutes of laughing so hard your cheeks hurt. Nothing important was discussed. Everything mattered.</div>
-    </div>
+const pointC = new THREE.PointLight(0x44ffcc, 3, 30);
+pointC.position.set(0, 8, -6);
+scene.add(pointC);
 
-  </div>
-</section>
+/* ─── Central torus-knot ─────────────────────────────────────── */
+const knotGeo = new THREE.TorusKnotGeometry(3.2, 0.9, 220, 28, 3, 5);
+const knotMat = new THREE.MeshPhongMaterial({
+  color: 0x0d1f3c,
+  emissive: 0x061226,
+  specular: 0x66ccff,
+  shininess: 120,
+  wireframe: false,
+  transparent: true,
+  opacity: 0.92,
+});
+const knot = new THREE.Mesh(knotGeo, knotMat);
+scene.add(knot);
 
-<!-- ═══════════════ DAY SCHEDULE ═══════════════ -->
-<div class="schedule-section">
-  <div class="schedule-inner">
-    <div class="section-label reveal">The Honest Version</div>
-    <div class="section-title reveal">A Real College Student's Day ⏰</div>
-    <div class="timeline">
+/* ─── Wireframe overlay on knot ──────────────────────────────── */
+const wireMat = new THREE.MeshBasicMaterial({
+  color: 0x1a6aff,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.08,
+});
+const wireKnot = new THREE.Mesh(knotGeo, wireMat);
+scene.add(wireKnot);
 
-      <div class="t-item reveal">
-        <div class="t-time">7:58 AM</div>
-        <div class="t-dot" style="background:#FFD23F"></div>
-        <div class="t-content">
-          <div class="t-activity">🚨 Alarm panic → sprint to class</div>
-          <div class="t-mood">Adrenaline level: sky-high. Shirt: on backwards. Made it.</div>
-        </div>
-      </div>
+/* ─── Orbiting rings ─────────────────────────────────────────── */
+function makeRing(radius, tube, color, rx, ry) {
+  const geo = new THREE.TorusGeometry(radius, tube, 6, 90);
+  const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.35 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.rotation.x = rx;
+  mesh.rotation.y = ry;
+  scene.add(mesh);
+  return mesh;
+}
 
-      <div class="t-item reveal">
-        <div class="t-time">9:15 AM</div>
-        <div class="t-dot" style="background:#4ECDC4"></div>
-        <div class="t-content">
-          <div class="t-activity">☕ Canteen chai + gossip round 1</div>
-          <div class="t-mood">Catching up on everything that happened last night in the hostel.</div>
-        </div>
-      </div>
+const rings = [
+  makeRing(5.5, 0.04, 0x2277ff, Math.PI / 2, 0),
+  makeRing(6.2, 0.03, 0xff3388, 1.1, 0.5),
+  makeRing(7.0, 0.025, 0x22ffcc, 0.3, 1.2),
+];
 
-      <div class="t-item reveal">
-        <div class="t-time">11:00 AM</div>
-        <div class="t-dot" style="background:#A855F7"></div>
-        <div class="t-content">
-          <div class="t-activity">💻 Lab session / group project chaos</div>
-          <div class="t-mood">5 people, 5 opinions, 0 consensus. Somehow the code works.</div>
-        </div>
-      </div>
+/* ─── Particle field ─────────────────────────────────────────── */
+const PARTICLE_COUNT = 2800;
+const positions = new Float32Array(PARTICLE_COUNT * 3);
+const colors    = new Float32Array(PARTICLE_COUNT * 3);
+const palette   = [
+  new THREE.Color(0x3399ff),
+  new THREE.Color(0xff4488),
+  new THREE.Color(0x44ffcc),
+  new THREE.Color(0xffffff),
+];
 
-      <div class="t-item reveal">
-        <div class="t-time">1:30 PM</div>
-        <div class="t-dot" style="background:#FF6B6B"></div>
-        <div class="t-content">
-          <div class="t-activity">🍛 Mess lunch + table takeover</div>
-          <div class="t-mood">Your squad occupies the corner table every single day. Sacred territory.</div>
-        </div>
-      </div>
+for (let i = 0; i < PARTICLE_COUNT; i++) {
+  const r = 9 + Math.random() * 22;
+  const theta = Math.random() * Math.PI * 2;
+  const phi   = Math.acos(2 * Math.random() - 1);
+  positions[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+  positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+  positions[i * 3 + 2] = r * Math.cos(phi);
 
-      <div class="t-item reveal">
-        <div class="t-time">3:00 PM</div>
-        <div class="t-dot" style="background:#84CC16"></div>
-        <div class="t-content">
-          <div class="t-activity">🏏 Sports ground / free period roaming</div>
-          <div class="t-mood">No lectures. Sun is out. Life is genuinely perfect right now.</div>
-        </div>
-      </div>
+  const c = palette[Math.floor(Math.random() * palette.length)];
+  colors[i * 3]     = c.r;
+  colors[i * 3 + 1] = c.g;
+  colors[i * 3 + 2] = c.b;
+}
 
-      <div class="t-item reveal">
-        <div class="t-time">7:00 PM</div>
-        <div class="t-dot" style="background:#3B82F6"></div>
-        <div class="t-content">
-          <div class="t-activity">📖 "Studying" (YouTube + notes ratio: 80/20)</div>
-          <div class="t-mood">Intended to study for 3 hours. Watched documentaries. Still counts.</div>
-        </div>
-      </div>
+const pGeo = new THREE.BufferGeometry();
+pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+pGeo.setAttribute('color',    new THREE.BufferAttribute(colors,    3));
 
-      <div class="t-item reveal">
-        <div class="t-time">11:30 PM</div>
-        <div class="t-dot" style="background:#FF6B6B"></div>
-        <div class="t-content">
-          <div class="t-activity">🌙 Room sessions — real talk, big laughs</div>
-          <div class="t-mood">Lights off, phones down, just voices. These are the nights you remember forever.</div>
-        </div>
-      </div>
+const pMat = new THREE.PointsMaterial({
+  size: 0.12,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.7,
+  sizeAttenuation: true,
+});
+const particles = new THREE.Points(pGeo, pMat);
+scene.add(particles);
 
-    </div>
-  </div>
-</div>
+/* ─── Icosahedron halo ───────────────────────────────────────── */
+const icoGeo = new THREE.IcosahedronGeometry(5.0, 1);
+const icoMat = new THREE.MeshBasicMaterial({
+  color: 0x1144aa,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.12,
+});
+const ico = new THREE.Mesh(icoGeo, icoMat);
+scene.add(ico);
 
-<!-- ═══════════════ VIBE METER ═══════════════ -->
-<div class="vibe-section">
-  <div class="vibe-inner">
-    <div class="section-label reveal">No filter</div>
-    <div class="section-title reveal">The Real College Emotion Meter 🎢</div>
-    <div class="vibe-bars" id="vibeBars">
+/* ─── Orbit controls (manual, no plugin needed) ─────────────── */
+let isDragging = false, prevMouse = { x: 0, y: 0 };
+let rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">😂 Pure Joy</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: var(--sun);" data-pct="92"></div></div>
-        <div class="vibe-pct">92%</div>
-      </div>
+renderer.domElement.addEventListener('mousedown', e => {
+  isDragging = true;
+  prevMouse = { x: e.clientX, y: e.clientY };
+});
+window.addEventListener('mouseup',  () => isDragging = false);
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  targetRotY += (e.clientX - prevMouse.x) * 0.006;
+  targetRotX += (e.clientY - prevMouse.y) * 0.006;
+  prevMouse = { x: e.clientX, y: e.clientY };
+});
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">😰 Exam Stress</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: var(--coral);" data-pct="87"></div></div>
-        <div class="vibe-pct">87%</div>
-      </div>
+// Touch support
+renderer.domElement.addEventListener('touchstart', e => {
+  isDragging = true;
+  prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
+window.addEventListener('touchend',  () => isDragging = false);
+window.addEventListener('touchmove', e => {
+  if (!isDragging) return;
+  targetRotY += (e.touches[0].clientX - prevMouse.x) * 0.006;
+  targetRotX += (e.touches[0].clientY - prevMouse.y) * 0.006;
+  prevMouse = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+});
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">🤝 Squad Goals</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: var(--mint);" data-pct="100"></div></div>
-        <div class="vibe-pct">100%</div>
-      </div>
+// Zoom
+let zoom = 18;
+window.addEventListener('wheel', e => {
+  zoom = Math.max(8, Math.min(35, zoom + e.deltaY * 0.03));
+});
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">💸 Broke but Happy</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: var(--purple);" data-pct="78"></div></div>
-        <div class="vibe-pct">78%</div>
-      </div>
+/* ─── Resize ─────────────────────────────────────────────────── */
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">☕ Caffeine Dependency</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: #8B5E3C;" data-pct="95"></div></div>
-        <div class="vibe-pct">95%</div>
-      </div>
+/* ─── Animation loop ─────────────────────────────────────────── */
+const clock = new THREE.Clock();
 
-      <div class="vibe-row reveal">
-        <div class="vibe-label">🌟 Hopeful AF</div>
-        <div class="vibe-track"><div class="vibe-fill" style="background: var(--blue);" data-pct="99"></div></div>
-        <div class="vibe-pct">99%</div>
-      </div>
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
 
-    </div>
-  </div>
-</div>
+  // Smooth drag rotation
+  rotX += (targetRotX - rotX) * 0.08;
+  rotY += (targetRotY - rotY) * 0.08;
+  camera.position.z += (zoom - camera.position.z) * 0.06;
 
-<!-- ═══════════════ FRIENDS ═══════════════ -->
-<div class="friends-section">
-  <div class="friends-inner">
-    <div class="section-label reveal">The people who make it magic</div>
-    <div class="section-title reveal">Your Forever Squad 🤝</div>
+  // Auto-rotate when idle
+  if (!isDragging) {
+    targetRotY += 0.003;
+    targetRotX = Math.sin(t * 0.18) * 0.25;
+  }
 
-    <div class="avatar-wall reveal">
-      <div class="avatar" style="background:#FFD23F"><span>👦</span><span class="name-tag">Arjun</span></div>
-      <div class="avatar" style="background:#FF6B6B"><span>👧</span><span class="name-tag">Priya</span></div>
-      <div class="avatar" style="background:#4ECDC4"><span>🧑</span><span class="name-tag">Rahul</span></div>
-      <div class="avatar" style="background:#A855F7; color:white"><span>👩</span><span class="name-tag">Sneha</span></div>
-      <div class="avatar" style="background:#84CC16"><span>👦</span><span class="name-tag">Dev</span></div>
-      <div class="avatar" style="background:#3B82F6; color:white"><span>👧</span><span class="name-tag">Riya</span></div>
-      <div class="avatar" style="background:#FB923C"><span>🧑</span><span class="name-tag">Karan</span></div>
-      <div class="avatar" style="background:#F472B6"><span>👩</span><span class="name-tag">Ananya</span></div>
-    </div>
+  // Apply to pivot
+  scene.rotation.x = rotX;
+  scene.rotation.y = rotY;
 
-    <!-- Rotating quotes -->
-    <div class="quote-ticker">
-      <div class="quote-text
+  // Knot pulsing
+  const pulse = 1 + Math.sin(t * 1.4) * 0.03;
+  knot.scale.setScalar(pulse);
+  wireKnot.scale.setScalar(pulse);
+  knot.rotation.z = t * 0.12;
+
+  // Rings orbit
+  rings[0].rotation.y = t * 0.38;
+  rings[1].rotation.x = t * 0.28;
+  rings[2].rotation.z = t * 0.22;
+
+  // Ico counter-rotate
+  ico.rotation.x = -t * 0.09;
+  ico.rotation.y =  t * 0.14;
+
+  // Particle slow spin
+  particles.rotation.y = t * 0.04;
+  particles.rotation.x = t * 0.02;
+
+  // Light orbit
+  pointA.position.x = Math.sin(t * 0.7) * 10;
+  pointA.position.z = Math.cos(t * 0.7) * 10;
+  pointB.position.x = Math.cos(t * 0.5) * 9;
+  pointB.position.y = Math.sin(t * 0.5) * 9;
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+</body>
+</html>
